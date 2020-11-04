@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .red{width: 100px;height: 100px;background-color: red}
+        .green{width: 100px;height: 100px;background-color: green}
+    </style>
+</head>
+<body>
+    取值：<input th:text ="${hello}" th:value="${hello}" value="1" text="单值取值"/> <br />
+    判断：<input th:if="${flag=='1'}" th:text ="${hello}" th:value="${hello}" value="1" text="单值取值"/> <br />
+    判断：<div th:if="${flag=='1'}">
+            <div style="width: 100px;height: 100px;background-color: red"></div>
+         </div>
+    <br />
+    三元:
+    <div th:class="(${flag=='0'}?'red':'green')"></div>
+    <br />
+    循环：
+    <div th:each="listStr:${list}">
+        <input  th:text ="${hello}" th:value="${listStr}" value="1" text="单值取值"/>
+    </div>
+
+    <br />
+
+    和js交互：
+    <a th:href="'javascript:a(\''+${hello}+'\')'">点我</a>
+    <br />
+    <a href="javascript:a('aaaa')">点我二</a>
+
+    <br />
+    <div th:include="testInner::part"></div>
+    <p th:utext="${gname}">color</p>
+    <input th:value="${session.user}"/>
+<script>
+    function a(h) {
+        alert("bing! "+h)
+    }
+    
+</script>
+</body>
+</html>

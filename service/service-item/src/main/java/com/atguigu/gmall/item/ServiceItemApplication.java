@@ -11,11 +11,12 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)//取消数据源自动配置
 @ComponentScan({"com.atguigu.gmall"})
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages= {"com.atguigu.gmall"})
+@EnableFeignClients(basePackages = {"com.atguigu.gmall"})
 public class ServiceItemApplication {
 
-public static void main(String[] args) {
-SpringApplication.run(ServiceItemApplication.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(ServiceItemApplication.class, args);
+        System.out.println("\033[35;5m"+"=================separator==============="+"\033[0m");
     }
 
 }
