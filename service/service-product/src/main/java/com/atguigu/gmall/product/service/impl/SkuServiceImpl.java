@@ -118,7 +118,6 @@ public class SkuServiceImpl implements SkuService {
         QueryWrapper<SkuInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",skuId);
         SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
-
         return skuInfo.getPrice();
     }
 

@@ -1,5 +1,6 @@
 package com.atguigu.gmall.item.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.item.service.ItemService;
 import com.atguigu.gmall.model.product.BaseCategoryView;
 import com.atguigu.gmall.model.product.SkuInfo;
@@ -51,12 +52,25 @@ public class ItemServiceImpl implements ItemService {
 
         //商品销售属性列表
         Long spuId = skuInfo.getSpuId();
-        List<SpuSaleAttr> spuSaleAttrs = productFeignClient.getSpuSaleAttrListCheckBySku(skuId, spuId);
+        List<SpuSaleAttr> spuSaleAttrs =  productFeignClient.getSpuSaleAttrListCheckBySku(skuId,spuId);
+
+        // 商品的销售属性值对应skuId的map
+        List<Map<String, Object>> valueSkuIdMapList = productFeignClient.getSkuValueIdsMap(spuId);
+
+        Map<String,String> valueSkuIdMap = new HashMap<>();
+
+        for (Map<String, Object> stringObjectMap : valueSkuIdMapList) {
+            String v_sku_id = stringObjectMap.get("sku_id")+"";
+            String k_value_ids = stringObjectMap.get("value_ids")+"";
+
+            valueSkuIdMap.put(k_value_ids,v_sku_id);
+        }
 
         map.put("categoryView", baseCategoryView);
-        map.put("skuInfo", skuInfo);
+        map.put("skuInfo",skuInfo);
         map.put("price",price);
         map.put("spuSaleAttrList",spuSaleAttrs);
+        map.put("valuesSkuJson", JSON.toJSONString(valueSkuIdMap));
         return map;
     }
 }

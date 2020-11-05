@@ -15,9 +15,10 @@ import java.util.Map;
 public interface ProductFeignClient {
     @RequestMapping("api/product/inner/getSkuInfo/{skuId}")
     SkuInfo getSkuInfo(@PathVariable("skuId") Long skuId);
-    
+
     @RequestMapping("api/product/inner/getCategoryView/{category3Id}")
     BaseCategoryView getCategoryView(@PathVariable("category3Id") Long category3Id);
+
 
     @RequestMapping("api/product/inner/getSkuPrice/{skuId}")
     BigDecimal getSkuPrice(@PathVariable("skuId") Long skuId);

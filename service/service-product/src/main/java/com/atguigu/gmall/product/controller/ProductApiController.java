@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/product")
@@ -28,7 +29,7 @@ public class ProductApiController {
 
     @Autowired
     SpuService spuService;
-    
+
     @RequestMapping("inner/getSkuInfo/{skuId}")
     SkuInfo getSkuInfo(@PathVariable("skuId") Long skuId) {
         SkuInfo skuInfo = skuService.getSkuInfo(skuId);
@@ -41,17 +42,26 @@ public class ProductApiController {
         return baseCategoryView;
     }
 
+    @RequestMapping("inner/getSkuPrice/{skuId}")
+    BigDecimal getSkuPrice(@PathVariable("skuId") Long skuId) {
+
+        BigDecimal price = skuService.getSkuPrice(skuId);
+
+        return price;
+    }
+
     @RequestMapping("inner/getSpuSaleAttrListCheckBySku/{skuId}/{spuId}")
-    List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(@PathVariable("skuId") Long skuId,@PathVariable("spuId") Long spuId) {
-        List<SpuSaleAttr> spuSaleAttrs = spuService.getSpuSaleAttrListCheckBySku(skuId,spuId);
+    List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(@PathVariable("skuId") Long skuId, @PathVariable("spuId") Long spuId) {
+        List<SpuSaleAttr> spuSaleAttrs = spuService.getSpuSaleAttrListCheckBySku(skuId, spuId);
         return spuSaleAttrs;
     }
 
-/*
-    @RequestMapping("inner/getSkuPrice/{skuId}")
-    BigDecimal getSkuPrice(@PathVariable("skuId") Long skuId){
-        BigDecimal price = skuService.getSkuPrice(skuId);
-        return price;
+    @RequestMapping("inner/getSkuValueIdsMap/{spuId}")
+    List<Map<String, Object>> getSkuValueIdsMap(@PathVariable("spuId") Long spuId) {
+
+        List<Map<String, Object>> map = skuService.getSkuValueIdsMap(spuId);
+
+        return map;
     }
-*/
+
 }
