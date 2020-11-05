@@ -7,6 +7,7 @@ import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
 import com.atguigu.gmall.product.client.ProductFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,6 +21,8 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     ProductFeignClient productFeignClient;
 
+    @Autowired
+    RedisTemplate redisTemplate;
     /***
      * 1 商品基本信息
      用缓存

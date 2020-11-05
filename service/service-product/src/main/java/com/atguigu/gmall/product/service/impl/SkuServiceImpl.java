@@ -1,5 +1,7 @@
 package com.atguigu.gmall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.atguigu.gmall.common.constant.RedisConst;
 import com.atguigu.gmall.model.product.SkuAttrValue;
 import com.atguigu.gmall.model.product.SkuImage;
 import com.atguigu.gmall.model.product.SkuInfo;
@@ -12,7 +14,10 @@ import com.atguigu.gmall.product.service.SkuService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.lang.StringUtils;
+import org.bouncycastle.crypto.util.SubjectPublicKeyInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,6 +38,9 @@ public class SkuServiceImpl implements SkuService {
 
     @Autowired
     SkuAttrValueMapper skuAttrValueMapper;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Override
     public void saveSkuInfo(SkuInfo skuInfo) {
@@ -97,17 +105,36 @@ public class SkuServiceImpl implements SkuService {
 
     @Override
     public SkuInfo getSkuInfo(Long skuId) {
+        SkuInfo skuInfo = null;
+        String skuKey = RedisConst.SKUKEY_PREFIX+skuId+RedisConst.SKUKEY_SUFFIX;
 
+        //查询缓存
+        String skuCache = (String) redisTemplate.opsForValue().get(skuKey);
+
+        if (StringUtils.isNotBlank(skuCache)) {
+            skuInfo = JSON.parseObject(skuCache, SkuInfo.class);
+        } else {
+            skuInfo = getSkuInfoFromDb(skuId);
+            //数据库查询完成,放入redis缓存
+            if (null!=skuInfo) {
+                redisTemplate.opsForValue().set(skuKey, JSON.toJSONString(skuInfo));
+            }
+        }
+        return skuInfo;
+    }
+
+    private SkuInfo getSkuInfoFromDb(Long skuId) {
+        SkuInfo skuInfo = null;
+        //如果缓存没有,查询数据库
         QueryWrapper<SkuInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",skuId);
-        SkuInfo skuInfo = skuInfoMapper.selectOne(queryWrapper);
-
-
-        QueryWrapper<SkuImage> skuImageQueryWrapper = new QueryWrapper<>();
-        skuImageQueryWrapper.eq("sku_id",skuId);
-        List<SkuImage> skuImages = skuImageMapper.selectList(skuImageQueryWrapper);
-
-        skuInfo.setSkuImageList(skuImages);
+        queryWrapper.eq("id", skuId);
+        skuInfo = skuInfoMapper.selectOne(queryWrapper);
+        if (null!=skuInfo) {
+            QueryWrapper<SkuImage> skuImageQueryWrapper = new QueryWrapper<>();
+            skuImageQueryWrapper.eq("sku_id", skuId);
+            List<SkuImage> skuImages = skuImageMapper.selectList(skuImageQueryWrapper);
+            skuInfo.setSkuImageList(skuImages);
+        }
 
         return skuInfo;
     }
@@ -116,7 +143,7 @@ public class SkuServiceImpl implements SkuService {
     public BigDecimal getSkuPrice(Long skuId) {
 
         QueryWrapper<SkuInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",skuId);
+        queryWrapper.eq("id", skuId);
         SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
         return skuInfo.getPrice();
     }
