@@ -11,10 +11,11 @@ import java.util.List;
 
 // 指定我们es 中的index，type 的信息。
 @Data
-@Document(indexName = "goods" ,type = "info",shards = 3,replicas = 2)
+@Document(indexName = "goods", type = "info", shards = 2, replicas = 0)
 public class Goods {
     // 商品Id
     @Id
+    //@Field(type = FieldType.Long)
     private Long id;
 
     // 默认图片

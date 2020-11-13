@@ -3,6 +3,7 @@ package com.atguigu.gmall.product.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.common.cache.GmallCache;
 import com.atguigu.gmall.common.constant.RedisConst;
+import com.atguigu.gmall.list.client.ListFeignClient;
 import com.atguigu.gmall.model.product.SkuAttrValue;
 import com.atguigu.gmall.model.product.SkuImage;
 import com.atguigu.gmall.model.product.SkuInfo;
@@ -45,6 +46,9 @@ public class SkuServiceImpl implements SkuService {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Autowired
+    ListFeignClient feignListClient;
 
     @Override
     public void saveSkuInfo(SkuInfo skuInfo) {
@@ -93,6 +97,7 @@ public class SkuServiceImpl implements SkuService {
         skuInfoMapper.updateById(skuInfo);
 
         // 将来要调用es插入已经上架的商品
+        feignListClient.upperGoods(skuId);
     }
 
     @Override
@@ -104,6 +109,7 @@ public class SkuServiceImpl implements SkuService {
         skuInfoMapper.updateById(skuInfo);
 
         // 将来要调用es删除已经下架的商品
+        feignListClient.lowerGoods(skuId);
 
     }
 
@@ -204,8 +210,8 @@ public class SkuServiceImpl implements SkuService {
     @Override
     public List<Map<String, Object>> getSkuValueIdsMap(Long spuId) {
 
-        List<Map<String, Object>> map = skuSaleAttrValueMapper.selectSaleAttrValuesBySpu(spuId);
 
+        List<Map<String, Object>> map = skuSaleAttrValueMapper.selectSaleAttrValuesBySpu(spuId);
         return map;
     }
 }
