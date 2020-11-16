@@ -82,7 +82,7 @@ public class ListApiServiceImpl implements ListApiService {
         // 将bool放入语句
         searchSourceBuilder.query(boolQueryBuilder);
 
-        System.out.println("========"+searchSourceBuilder.toString()+"============");
+        System.out.println("========" + searchSourceBuilder.toString() + "============");
 
         // 请求命令对象得封装
         String[] indeces = {"goods"};
@@ -94,7 +94,6 @@ public class ListApiServiceImpl implements ListApiService {
 
     /**
      * 搜索方法
-     *
      * @param searchParam
      * @return
      */
@@ -131,14 +130,14 @@ public class ListApiServiceImpl implements ListApiService {
         List<Goods> goods = new ArrayList<>();
         SearchHits hits = search.getHits();
         SearchHit[] resultHits = hits.getHits();
-        if (null!=resultHits && resultHits.length > 0) {
+        if (null != resultHits && resultHits.length > 0) {
             for (SearchHit resultHit : resultHits) {
                 String sourceAsString = resultHit.getSourceAsString();
                 Goods good = JSON.parseObject(sourceAsString, Goods.class);
 
                 // 解析高亮
                 Map<String, HighlightField> highlightFields = resultHit.getHighlightFields();
-                if (null!=highlightFields && highlightFields.size() > 0) {
+                if(null!=highlightFields&&highlightFields.size()>0){
                     HighlightField title = highlightFields.get("title");
                     String titleName = title.getFragments()[0].toString();
                     good.setTitle(titleName);
@@ -151,11 +150,11 @@ public class ListApiServiceImpl implements ListApiService {
         // 聚合函数
         Map<String, Aggregation> stringAggregationMap = search.getAggregations().asMap();
         // 商标聚合解析
-        ParsedLongTerms tmIdAggParsedLongTerms = (ParsedLongTerms) stringAggregationMap.get("tmIdAgg");
+        ParsedLongTerms tmIdAggParsedLongTerms = (ParsedLongTerms)stringAggregationMap.get("tmIdAgg");
         //Aggregation tmIdAgg = stringAggregationMap.get("tmIdAgg");
         // 获得商标聚合的bucket
         List<? extends Terms.Bucket> tmBuckets = tmIdAggParsedLongTerms.getBuckets();
-        List<SearchResponseTmVo> trademarkList = tmBuckets.stream().map(bucket -> {
+        List<SearchResponseTmVo> trademarkList = tmBuckets.stream().map(bucket->{
             SearchResponseTmVo searchResponseTmVo = new SearchResponseTmVo();
             String keyAsString = bucket.getKeyAsString();//tmId
             // 跟解析tmId的聚合一样，在进行一次聚合循环，拿到tmName
@@ -179,7 +178,7 @@ public class ListApiServiceImpl implements ListApiService {
         ParsedLongTerms attrIdAgg = attrAgg.getAggregations().get("attrIdAgg");
         List<? extends Terms.Bucket> attrIdBuckets = attrIdAgg.getBuckets();
 
-        List<SearchResponseAttrVo> searchResponseAttrVos = attrIdBuckets.stream().map(attrIdBucket -> {
+        List<SearchResponseAttrVo> searchResponseAttrVos = attrIdBuckets.stream().map(attrIdBucket->{
             SearchResponseAttrVo searchResponseAttrVo = new SearchResponseAttrVo();
             long attrId = attrIdBucket.getKeyAsNumber().longValue();
             searchResponseAttrVo.setAttrId(attrId);
@@ -191,13 +190,15 @@ public class ListApiServiceImpl implements ListApiService {
 
             Map<String, Aggregation> attrValueSubMap = attrIdBucket.getAggregations().asMap();
             ParsedStringTerms attrValueAgg = (ParsedStringTerms) attrValueSubMap.get("attrValueAgg");
-            List<String> attrValues = attrValueAgg.getBuckets().stream().map(attrValueBucket -> {
+            List<String> attrValues = attrValueAgg.getBuckets().stream().map(attrValueBucket->{
                 String attrValue = attrValueBucket.getKeyAsString();
                 return attrValue;
             }).collect(Collectors.toList());
             searchResponseAttrVo.setAttrValueList(attrValues);// 封装属性值的解析结果给属性Vo集合
             return searchResponseAttrVo;
         }).collect(Collectors.toList());
+
+
 
 
         searchResponseVo.setAttrsList(searchResponseAttrVos);
@@ -221,7 +222,7 @@ public class ListApiServiceImpl implements ListApiService {
         Long category1Id = searchParam.getCategory1Id();
         Long category2Id = searchParam.getCategory2Id();
         Long category3Id = searchParam.getCategory3Id();
-        if (null!=category3Id && category3Id > 0) {
+        if (null != category3Id && category3Id > 0) {
             TermQueryBuilder termQueryBuilder = new TermQueryBuilder("category3Id", category3Id);
             boolQueryBuilder.filter(termQueryBuilder);
 
@@ -238,7 +239,7 @@ public class ListApiServiceImpl implements ListApiService {
         // 属性集合
         // 属性id:属性值名称:属性名称
         String[] props = searchParam.getProps();
-        if (null!=props && props.length > 0) {
+        if(null!=props&&props.length>0){
             for (String prop : props) {
                 String[] split = prop.split(":");
                 String attrId = split[0];
@@ -285,7 +286,7 @@ public class ListApiServiceImpl implements ListApiService {
         searchSourceBuilder.size(20);
 
         // 高亮
-        if (StringUtils.isNotBlank(keyword)) {
+        if(StringUtils.isNotBlank(keyword)){
             HighlightBuilder highlightBuilder = new HighlightBuilder();
             highlightBuilder.preTags("<span style='color:red;font-weight:bolder'>");
             highlightBuilder.field("title");
@@ -295,21 +296,21 @@ public class ListApiServiceImpl implements ListApiService {
 
         // 排序
         String order = searchParam.getOrder();
-        if (StringUtils.isNotBlank(order)) {
+        if(StringUtils.isNotBlank(order)){
             String[] split = order.split(":");
             String fieldFlag = split[0];
             String sortOrder = split[1];
 
             String field = "hotScore";
-            if (fieldFlag.equals("2")) {
+            if(fieldFlag.equals("2")){
                 field = "price";
             }
-            searchSourceBuilder.sort(field, sortOrder.equals("asc") ? SortOrder.ASC : SortOrder.DESC);
+            searchSourceBuilder.sort(field, sortOrder.equals("asc")?SortOrder.ASC:SortOrder.DESC);
         }
 
         // 打印dsl语句
         SearchRequest searchRequest = new SearchRequest(indeces, searchSourceBuilder);
-        System.out.println("打印dsl语句---⬇\n"+searchSourceBuilder.toString());
+        System.out.println(searchSourceBuilder.toString());
         return searchRequest;
     }
 
@@ -327,7 +328,7 @@ public class ListApiServiceImpl implements ListApiService {
         SkuInfo skuInfo = productFeignClient.getSkuInfo(skuId);
         // 查询品牌
         BaseTrademark baseTrademark = productFeignClient.getTrademark(skuInfo.getTmId());
-        if (baseTrademark!=null) {
+        if (baseTrademark != null) {
             goods.setTmId(skuInfo.getTmId());
             goods.setTmName(baseTrademark.getTmName());
             goods.setTmLogoUrl(baseTrademark.getLogoUrl());
@@ -336,7 +337,7 @@ public class ListApiServiceImpl implements ListApiService {
 
         // 查询分类
         BaseCategoryView baseCategoryView = productFeignClient.getCategoryView(skuInfo.getCategory3Id());
-        if (baseCategoryView!=null) {
+        if (baseCategoryView != null) {
             goods.setCategory1Id(baseCategoryView.getCategory1Id());
             goods.setCategory1Name(baseCategoryView.getCategory1Name());
             goods.setCategory2Id(baseCategoryView.getCategory2Id());
@@ -368,7 +369,7 @@ public class ListApiServiceImpl implements ListApiService {
         Double aDouble = redisTemplate.opsForZSet().incrementScore("hotScore", skuId, 1);
 
         // 用当前分数摸10，如果没有余数，则更新es
-        if (aDouble%10==0) {
+        if (aDouble % 10 == 0) {
             // 调用es更新分数
             Optional<Goods> optional = elasticsearchRepository.findById(skuId);
             Goods goods = optional.get();

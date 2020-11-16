@@ -7,8 +7,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@MapperScan("com.atguigu.gmall.product.mapper")
 @SpringBootApplication
+@MapperScan("com.atguigu.gmall.product.mapper")
 @ComponentScan("com.atguigu.gmall")
 @EnableSwagger2
 @EnableFeignClients(basePackages = {"com.atguigu.gmall"})
