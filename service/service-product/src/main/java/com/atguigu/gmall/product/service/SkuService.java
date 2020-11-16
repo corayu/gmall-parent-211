@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SkuService {
+
     void saveSkuInfo(SkuInfo skuInfo);
 
     IPage<SkuInfo> list(Page pageParam);

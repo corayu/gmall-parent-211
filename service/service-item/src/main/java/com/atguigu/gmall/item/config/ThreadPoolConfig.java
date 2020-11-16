@@ -9,9 +9,12 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class ThreadPoolConfig {
+
     @Bean
-    public ThreadPoolExecutor threadPoolExecutor() {
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(50, 100, 50, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000));
+    public ThreadPoolExecutor threadPoolExecutor(){
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(50, 100, 50, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10000));
         return threadPoolExecutor;
+
     }
+
 }

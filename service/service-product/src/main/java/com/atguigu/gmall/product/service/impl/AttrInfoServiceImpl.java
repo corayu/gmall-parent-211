@@ -63,6 +63,7 @@ public class AttrInfoServiceImpl implements AttrInfoService {
             }
         }
     }
+
     @Override
     public List<SearchAttr> getAttrList(Long skuId) {
 

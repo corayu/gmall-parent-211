@@ -1,40 +1,50 @@
 package com.atguigu.gmall.test.juc6;
 
+import jdk.nashorn.internal.codegen.CompilerConstants;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 public class Test {
+
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        /*CallableImpl callable = new CallableImpl();
-        FutureTask<Double> doubleFutureTask = new FutureTask<>(callable);
-        new Thread(doubleFutureTask).start();
-        Double aDouble = doubleFutureTask.get();
-        System.out.println(aDouble);*/
 
+//        CallableImpl callable = new CallableImpl("qt");
+//
+//        FutureTask<Double> doubleFutureTask = new FutureTask<Double>(callable);
+//
+//        new Thread(doubleFutureTask).start();
+//
+//        Double aDouble = doubleFutureTask.get();
+//
+//        System.out.println(aDouble);
 
-        //在一个方法中分出三条线程分别查询3个商品接口
+        // 在一个方法中分出三条线程，分别查询三个商品接口
 
-        //任务一
-        CallableImpl jdcallable = new CallableImpl("jd");
-        FutureTask<Double> JDTask = new FutureTask<Double>(jdcallable);
-        new Thread(JDTask).start();
+        // 任务1
+        CallableImpl callableJd = new CallableImpl("jd");
+        FutureTask<Double> jDTask = new FutureTask<Double>(callableJd);
+        new Thread(jDTask).start();
 
-        //任务二
-        CallableImpl tbcallable = new CallableImpl("tb");
-        FutureTask<Double> TBTask = new FutureTask<Double>(tbcallable);
-        new Thread(TBTask).start();
+        // 任务2
+        CallableImpl callableTb = new CallableImpl("tb");
+        FutureTask<Double> tBTask = new FutureTask<Double>(callableJd);
+        new Thread(tBTask).start();
 
-        //任务三
-        CallableImpl pddcallable = new CallableImpl("pdd");
-        FutureTask<Double> PddTask = new FutureTask<Double>(pddcallable);
-        new Thread(PddTask).start();
+        // 任务3
+        CallableImpl callablePdd = new CallableImpl("pdd");
+        FutureTask<Double> pddTask = new FutureTask<Double>(callableJd);
+        new Thread(pddTask).start();
 
-        Double jdPrice = JDTask.get();
-        Double tbPrice = TBTask.get();
-        Double pddPrice = PddTask.get();
-        System.out.println("京东价格"+jdPrice);
-        System.out.println("淘宝价格"+tbPrice);
-        System.out.println("拼多多价格"+pddPrice);
-        System.out.println("这是主线程..");
+        Double jdPrice = jDTask.get();
+        Double tbPrice = tBTask.get();
+        Double pddPrice = pddTask.get();
+
+        System.out.println("该商品京东价格为："+jdPrice);
+        System.out.println("该商品淘宝价格为："+tbPrice);
+        System.out.println("该商品拼多多价格为："+pddPrice);
+
+        System.out.println("主线程执行完毕");
+
     }
 }

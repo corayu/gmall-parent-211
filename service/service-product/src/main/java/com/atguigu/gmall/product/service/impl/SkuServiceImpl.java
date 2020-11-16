@@ -114,6 +114,7 @@ public class SkuServiceImpl implements SkuService {
     }
 
 
+
     @Override
     @GmallCache
     public SkuInfo getSkuInfoNx(Long skuId) {
@@ -121,25 +122,26 @@ public class SkuServiceImpl implements SkuService {
         return skuInfo;
     }
 
+
     public SkuInfo getSkuInfoNxBak(Long skuId) {
         SkuInfo skuInfo = null;
         String skuKey = RedisConst.SKUKEY_PREFIX+skuId+RedisConst.SKUKEY_SUFFIX;
         // 查询缓存
-        String skuCache = (String) redisTemplate.opsForValue().get(skuKey);
-        if (StringUtils.isNotBlank(skuCache)) {
+        String skuCache = (String)redisTemplate.opsForValue().get(skuKey);
+        if(StringUtils.isNotBlank(skuCache)){
             skuInfo = JSON.parseObject(skuCache, SkuInfo.class);
-        } else {
+        }else{
             // 查询db时必须获得分布式锁，以保证数据库操作的安全性
             String uid = UUID.randomUUID().toString();
             Boolean stockLock = redisTemplate.opsForValue().setIfAbsent("sku:"+skuId+":lock", uid, 1, TimeUnit.SECONDS);//3秒钟分布式锁过期时间
-            if (stockLock) {
+            if(stockLock){
                 skuInfo = getSkuInfoFromDb(skuId);
                 // 数据库查询完成，放入redis缓存
-                if (null!=skuInfo) {
-                    redisTemplate.opsForValue().set(skuKey, JSON.toJSONString(skuInfo));
-                } else {
+                if(null!=skuInfo){
+                    redisTemplate.opsForValue().set(skuKey,JSON.toJSONString(skuInfo));
+                }else{
                     // 访问不存在的key，防止空对象到redis中，防止缓存穿透
-                    redisTemplate.opsForValue().set(skuKey, JSON.toJSONString(new SkuInfo()), 10, TimeUnit.SECONDS);
+                    redisTemplate.opsForValue().set(skuKey,JSON.toJSONString(new SkuInfo()),10,TimeUnit.SECONDS);
                 }
                 String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
                 // 设置lua脚本返回的数据类型
@@ -147,8 +149,8 @@ public class SkuServiceImpl implements SkuService {
                 // 设置lua脚本返回类型为Long
                 // redisScript.setResultType(Long.class);
                 redisScript.setScriptText(script);
-                redisTemplate.execute(redisScript, Arrays.asList("sku:"+skuId+":lock"), uid);
-            } else {
+                redisTemplate.execute(redisScript, Arrays.asList("sku:"+skuId+":lock"),uid);
+            }else{
                 // 自选
                 try {
                     Thread.sleep(1000);
@@ -164,37 +166,39 @@ public class SkuServiceImpl implements SkuService {
 
     @Override
     public SkuInfo getSkuInfo(Long skuId) {
+
         SkuInfo skuInfo = null;
+
         String skuKey = RedisConst.SKUKEY_PREFIX+skuId+RedisConst.SKUKEY_SUFFIX;
 
-        //查询缓存
-        String skuCache = (String) redisTemplate.opsForValue().get(skuKey);
+        // 查询缓存
+        String skuCache = (String)redisTemplate.opsForValue().get(skuKey);
 
-        if (StringUtils.isNotBlank(skuCache)) {
+        if(StringUtils.isNotBlank(skuCache)){
             skuInfo = JSON.parseObject(skuCache, SkuInfo.class);
-        } else {
+        }else{
             skuInfo = getSkuInfoFromDb(skuId);
-            //数据库查询完成,放入redis缓存
-            if (null!=skuInfo) {
-                redisTemplate.opsForValue().set(skuKey, JSON.toJSONString(skuInfo));
+            // 数据库查询完成，放入redis缓存
+            if(null!=skuInfo){
+                redisTemplate.opsForValue().set(skuKey,JSON.toJSONString(skuInfo));
             }
         }
+
         return skuInfo;
     }
 
     private SkuInfo getSkuInfoFromDb(Long skuId) {
         SkuInfo skuInfo = null;
-        //如果缓存没有,查询数据库
+        // 如果缓存没有，查询数据库
         QueryWrapper<SkuInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", skuId);
+        queryWrapper.eq("id",skuId);
         skuInfo = skuInfoMapper.selectOne(queryWrapper);
-        if (null!=skuInfo) {
+        if(null!=skuInfo){
             QueryWrapper<SkuImage> skuImageQueryWrapper = new QueryWrapper<>();
-            skuImageQueryWrapper.eq("sku_id", skuId);
+            skuImageQueryWrapper.eq("sku_id",skuId);
             List<SkuImage> skuImages = skuImageMapper.selectList(skuImageQueryWrapper);
             skuInfo.setSkuImageList(skuImages);
         }
-
         return skuInfo;
     }
 
@@ -202,16 +206,17 @@ public class SkuServiceImpl implements SkuService {
     public BigDecimal getSkuPrice(Long skuId) {
 
         QueryWrapper<SkuInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", skuId);
+        queryWrapper.eq("id",skuId);
         SkuInfo skuInfo = skuInfoMapper.selectById(skuId);
+
         return skuInfo.getPrice();
     }
 
     @Override
     public List<Map<String, Object>> getSkuValueIdsMap(Long spuId) {
 
-
         List<Map<String, Object>> map = skuSaleAttrValueMapper.selectSaleAttrValuesBySpu(spuId);
+
         return map;
     }
 }

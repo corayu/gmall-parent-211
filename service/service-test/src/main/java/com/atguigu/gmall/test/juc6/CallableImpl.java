@@ -3,6 +3,7 @@ package com.atguigu.gmall.test.juc6;
 import java.util.concurrent.Callable;
 
 public class CallableImpl implements Callable<Double> {
+
     private String mall = "";
 
     public CallableImpl(String mall) {
@@ -11,25 +12,23 @@ public class CallableImpl implements Callable<Double> {
 
     @Override
     public Double call() throws Exception {
-        Double price = null;
+        //System.out.println("正在计算商品价格。。。");
+
+        Double price = 0d;
+
         if (mall.equals("jd")) {
-            price = 100d;
-            System.out.println("查询京东是..."+price);
+            System.out.println("正在查询京东价格。。。");
+            price = 102d;
         } else if (mall.equals("tb")) {
-            price = 200d;
-            System.out.println("查询淘宝..."+price);
-        } else if (mall.equals("pdd")) {
-            price = 300d;
+            System.out.println("正在查询淘宝价格。。。");
+            price = 101d;
+        } else {
+            System.out.println("正在查询拼多多价格。。。");
             Thread.sleep(2000);
-            System.out.println("查询拼多多..."+price);
+            price = 10d;
         }
+
         return price;
     }
 
-    
-    /*@Override
-    public Double call() throws Exception {
-        System.out.println("正在计算商品价格啊");
-        return 0d;  
-    }*/
 }

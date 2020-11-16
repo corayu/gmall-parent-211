@@ -3,6 +3,7 @@ package com.atguigu.gmall.test.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,12 +13,12 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 public class TestController {
+
     @Autowired
     RedisTemplate redisTemplate;
 
-
     @RequestMapping("testLockNx")
-    public String testLockNx() {
+    public String testLockNx(){
         System.out.println("正在请求分布式中的一个节点微服务");
 
         String uid = UUID.randomUUID().toString();
@@ -56,22 +57,22 @@ public class TestController {
             }
             return testLockNx();
         }
-
         return "剩余库存数量:0";
     }
 
     @RequestMapping("testLock")
-    public String testLock() {
+    public String testLock(){
         System.out.println("正在请求分布式中的一个节点微服务");
-        String stock = redisTemplate.opsForValue().get("stock").toString();//在docker中已經set stock 100
+        String stock = redisTemplate.opsForValue().get("stock").toString();
         int i = Integer.parseInt(stock);
-        if (i > 0) {
-            i--;
-            redisTemplate.opsForValue().set("stock", i);
+        if(i>0){
+            i -- ;
+            redisTemplate.opsForValue().set("stock",i);
             System.out.println("目前库存剩余数量:"+i);
-        } else {
+        }else{
             System.out.println("目前库存剩余数量:0");
         }
         return "剩余库存数量:0";
     }
+
 }

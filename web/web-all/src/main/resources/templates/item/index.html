@@ -147,8 +147,6 @@
                 </div>
                 <div class="clearfix choose">
                     <div id="specification" class="summary-wrap clearfix">
-
-
                         <dl v-for="spuSaleAttr in spuSaleAttrList" :key="spuSaleAttr.id">
                             <dt>
                             <div class="fl title">
@@ -159,7 +157,6 @@
                                 <a href="javascript:;" :class="{'selected':spuSaleAttrValue.isChecked == 1}">{{spuSaleAttrValue.saleAttrValueName}}<span title="点击取消选择">&nbsp;</span></a>
                             </dd>
                         </dl>
-
                     </div>
 
                     <div class="summary-wrap">
@@ -1040,7 +1037,7 @@
             },
 
             spuSaleAttrFun(index, spuSaleAttrValueId) {
-                alert(this.valuesSkuJson);
+
                 this.isAddCart = true
                 var valuesSkuJson = JSON.parse(this.valuesSkuJson);//字符串变成json
 
@@ -1049,7 +1046,6 @@
 
                 var valuesSku = this.selectValuesSkus.join('|')
 
-                alert(valuesSku);
 
                 //查看新组装的数据是否存在skuId，如果存在跳到该页面，如果不存在控制选中状态
                 var curSkuId = valuesSkuJson[valuesSku]//通过json中的key获得json的value

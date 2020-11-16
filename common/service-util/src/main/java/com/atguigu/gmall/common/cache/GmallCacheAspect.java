@@ -4,6 +4,7 @@ package com.atguigu.gmall.common.cache;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -27,6 +28,7 @@ public class GmallCacheAspect {
     public Object cacheAroundAdvice(ProceedingJoinPoint point) {
         // 缓存处理代码
         Object proceed = null;
+
         // 拼接缓存key
         Object[] args = point.getArgs();// 通过反射获得被代理方法的参数
         String id = new String(args[0]+"");

@@ -7,15 +7,17 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication
 @MapperScan("com.atguigu.gmall.product.mapper")
+@SpringBootApplication
 @ComponentScan("com.atguigu.gmall")
-
 @EnableSwagger2
 @EnableFeignClients(basePackages = {"com.atguigu.gmall"})
 public class ProductApplication {
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
         SpringApplication.run(ProductApplication.class, args);
-        System.out.println("\033[35;5m" + "=================separator===============" + "\033[0m");
-	}
+        System.out.println("\033[35;5m"+"=====================separator======================"+"\033[0m");
+
+    }
+
 }

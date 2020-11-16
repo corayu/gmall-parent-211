@@ -28,9 +28,9 @@ public class Test {
 
         new Thread(()->{
             for (int i = 0; i < 25; i++) {
-                printing.print1(); 
+                printing.print1();
             }
         },"打印1的线程2").start();
- 
+
     }
 }

@@ -13,10 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.atguigu.gmall"})
 public class ServiceItemApplication {
-
     public static void main(String[] args) {
-        SpringApplication.run(ServiceItemApplication.class, args);
-        System.out.println("\033[35;5m"+"=================separator==============="+"\033[0m");
+        SpringApplication.run(ServiceItemApplication.class, args);System.out.println("\033[35;5m"+"=====================separator======================"+"\033[0m");
     }
-
 }

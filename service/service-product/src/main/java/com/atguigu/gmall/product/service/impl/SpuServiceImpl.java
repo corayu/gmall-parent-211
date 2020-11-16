@@ -6,7 +6,6 @@ import com.atguigu.gmall.product.service.SpuService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -120,8 +119,10 @@ public class SpuServiceImpl implements SpuService {
     }
 
     @Override
-    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku( Long skuId,Long spuId) {
-        List<SpuSaleAttr>  spuSaleAttrs=spuSaleAttrMapper.selectSpuSaleAttrListCheckBySku(skuId, spuId);
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId,Long spuId) {
+
+        List<SpuSaleAttr> spuSaleAttrs = spuSaleAttrMapper.selectSpuSaleAttrListCheckBySku(skuId,spuId);
+
         return spuSaleAttrs;
     }
 }

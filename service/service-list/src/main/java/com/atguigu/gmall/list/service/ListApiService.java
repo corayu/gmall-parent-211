@@ -4,7 +4,6 @@ import com.atguigu.gmall.model.list.SearchParam;
 import com.atguigu.gmall.model.list.SearchResponseVo;
 
 public interface ListApiService {
-    
     void upperGoods(Long skuId);
 
     void lowerGoods(Long skuId);

@@ -309,7 +309,7 @@ public class ListApiServiceImpl implements ListApiService {
 
         // 打印dsl语句
         SearchRequest searchRequest = new SearchRequest(indeces, searchSourceBuilder);
-        System.out.println(searchSourceBuilder.toString());
+        System.out.println("打印dsl语句---⬇\n"+searchSourceBuilder.toString());
         return searchRequest;
     }
 

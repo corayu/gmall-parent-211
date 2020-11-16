@@ -14,7 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 public class ServiceListApplication {
     public static void main(String[] args) {
 
-        SpringApplication.run(ServiceListApplication.class, args);
-        System.out.println("\033[35;5m" +"=================separator==============="  + "\033[0m");
+        SpringApplication.run(ServiceListApplication.class, args);System.out.println("\033[35;5m"+"=====================separator======================"+"\033[0m");
     }
 }

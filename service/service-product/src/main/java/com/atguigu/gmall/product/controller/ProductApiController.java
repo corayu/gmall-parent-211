@@ -41,13 +41,13 @@ public class ProductApiController {
     }
 
     @RequestMapping("inner/getCategoryView/{category3Id}")
-    BaseCategoryView getCategoryView(@PathVariable("category3Id") Long category3Id) {
+    BaseCategoryView getCategoryView(@PathVariable("category3Id") Long category3Id){
         BaseCategoryView baseCategoryView = categoryService.getCategoryView(category3Id);
         return baseCategoryView;
     }
 
     @RequestMapping("inner/getSkuPrice/{skuId}")
-    BigDecimal getSkuPrice(@PathVariable("skuId") Long skuId) {
+    BigDecimal getSkuPrice(@PathVariable("skuId") Long skuId){
 
         BigDecimal price = skuService.getSkuPrice(skuId);
 
@@ -55,13 +55,15 @@ public class ProductApiController {
     }
 
     @RequestMapping("inner/getSpuSaleAttrListCheckBySku/{skuId}/{spuId}")
-    List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(@PathVariable("skuId") Long skuId, @PathVariable("spuId") Long spuId) {
-        List<SpuSaleAttr> spuSaleAttrs = spuService.getSpuSaleAttrListCheckBySku(skuId, spuId);
+    List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(@PathVariable("skuId") Long skuId, @PathVariable("spuId") Long spuId){
+
+        List<SpuSaleAttr> spuSaleAttrs = spuService.getSpuSaleAttrListCheckBySku(skuId,spuId);
+
         return spuSaleAttrs;
     }
 
     @RequestMapping("inner/getSkuValueIdsMap/{spuId}")
-    List<Map<String, Object>> getSkuValueIdsMap(@PathVariable("spuId") Long spuId) {
+    List<Map<String, Object>> getSkuValueIdsMap(@PathVariable("spuId") Long spuId){
 
         List<Map<String, Object>> map = skuService.getSkuValueIdsMap(spuId);
 
@@ -81,4 +83,5 @@ public class ProductApiController {
 
         return baseTrademark;
     }
+
 }

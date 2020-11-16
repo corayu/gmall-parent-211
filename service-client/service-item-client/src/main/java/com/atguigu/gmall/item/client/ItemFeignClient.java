@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
 
-@FeignClient("service-item")
+@FeignClient(value = "service-item")
 public interface ItemFeignClient {
 
     @RequestMapping("/api/item/{skuId}")
-    Result<Map<String, Object>> getItem(@PathVariable("skuId") Long skuId);
+    Result<Map<String,Object>> getItem(@PathVariable("skuId") Long skuId);
 }
