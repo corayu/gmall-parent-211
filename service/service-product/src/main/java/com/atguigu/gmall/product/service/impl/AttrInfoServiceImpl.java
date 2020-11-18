@@ -3,6 +3,7 @@ package com.atguigu.gmall.product.service.impl;
 import com.atguigu.gmall.model.list.SearchAttr;
 import com.atguigu.gmall.model.product.BaseAttrInfo;
 import com.atguigu.gmall.model.product.BaseAttrValue;
+import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.product.mapper.BaseAttrInfoMapper;
 import com.atguigu.gmall.product.mapper.BaseAttrValueMapper;
 import com.atguigu.gmall.product.service.AttrInfoService;

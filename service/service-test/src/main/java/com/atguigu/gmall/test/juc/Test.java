@@ -1,5 +1,6 @@
 package com.atguigu.gmall.test.juc;
 
+
 public class Test {
 
     public static void main(String[] args) {
@@ -11,7 +12,7 @@ public class Test {
             new Thread(myRunnable).start();
         }
 
-        new Thread(()->{
+        new Thread(() -> {
             myTicket.sale();
         }).start();
 
