@@ -15,6 +15,5 @@ import org.springframework.context.annotation.ComponentScan;
 public class ServiceItemApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServiceItemApplication.class, args);
-        System.out.println("\033[35;5m" + "=============================" + "\033[0m");
     }
 }

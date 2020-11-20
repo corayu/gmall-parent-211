@@ -15,6 +15,4 @@ public class PassportController {
         request.setAttribute("originUrl",originUrl);
         return "login";
     }
-
-
 }

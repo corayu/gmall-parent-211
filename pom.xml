@@ -9,8 +9,6 @@
         <module>service</module>
         <module>web</module>
         <module>service-client</module>
-        <module>service/service-test</module>
-        <module>service/service-list</module>
         <module>server-gateway</module>
     </modules>
 

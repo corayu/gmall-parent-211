@@ -4,14 +4,17 @@ package com.atguigu.gmall.product.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.model.list.SearchAttr;
-import com.atguigu.gmall.model.product.*;
+import com.atguigu.gmall.model.product.BaseCategoryView;
+import com.atguigu.gmall.model.product.BaseTrademark;
+import com.atguigu.gmall.model.product.SkuInfo;
+import com.atguigu.gmall.model.product.SpuSaleAttr;
 import com.atguigu.gmall.product.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +89,8 @@ public class ProductApiController {
     }
 
     @RequestMapping("inner/getBaseCategoryList")
-    Result getBaseCategoryList(){
+    Result getBaseCategoryList(HttpServletRequest request){
+        String userId = request.getHeader("userId");
 
         List<JSONObject> baseCategoryList  = categoryService.getBaseCategoryList();
         return Result.ok(baseCategoryList);

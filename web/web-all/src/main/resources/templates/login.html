@@ -114,13 +114,12 @@
 		methods: {
             submitLogin() {
                 login.login(this.user).then(response => {
-                    debugger
+                    alert(response.data.data.token);
                     if (response.data.code == 200) {
                         //把token存在cookie中、也可以放在localStorage中
                         auth.setToken(response.data.data.token)
                         auth.setUserInfo(JSON.stringify(response.data.data))
 
-                        console.log("originUrl:"+this.originUrl);
                         if(this.originUrl == ''){
                             window.location.href="http://www.gmall.com/index.html"
                             return ;
