@@ -28,6 +28,7 @@ public class ListController {
     private ProductFeignClient productFeignClient;
 
 
+
     @GetMapping({"/","index"})
     public String index(HttpServletRequest request,SearchParam searchParam, Model model) {
 

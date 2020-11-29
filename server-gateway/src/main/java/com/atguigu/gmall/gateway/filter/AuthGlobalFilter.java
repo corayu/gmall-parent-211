@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Component
 public class AuthGlobalFilter implements GlobalFilter {
@@ -48,10 +49,9 @@ public class AuthGlobalFilter implements GlobalFilter {
         String path = request.getURI().getPath();
 
         // 不拦截的请求，如css，js，图片等
-        if (path.lastIndexOf("login")!=-1 || path.lastIndexOf(".png")!=-1 || path.lastIndexOf(".jpg")!=-1 || path.lastIndexOf(".css")!=-1 || path.lastIndexOf(".js")!=-1) {
+        if (path.lastIndexOf("login") != -1 || path.lastIndexOf(".png") != -1 || path.lastIndexOf(".jpg") != -1 || path.lastIndexOf(".css") != -1 || path.lastIndexOf(".js") != -1) {
             return chain.filter(exchange);
         }
-
 
         // 校验内部服务调用的url:api/...
         boolean matchInner = antPathMatcher.match("/**/inner/**", path);
@@ -66,7 +66,7 @@ public class AuthGlobalFilter implements GlobalFilter {
             if (StringUtils.isEmpty(userId)) {
                 // 跳入登录页面
                 response.setStatusCode(HttpStatus.SEE_OTHER);
-                response.getHeaders().set(HttpHeaders.LOCATION, "http://www.gmall.com/login.html?originUrl="+request.getURI());
+                response.getHeaders().set(HttpHeaders.LOCATION, "http://www.gmall.com/login.html?originUrl=" + request.getURI());
                 Mono<Void> voidMono = response.setComplete();
                 return voidMono;
             }
@@ -77,10 +77,10 @@ public class AuthGlobalFilter implements GlobalFilter {
         String urii = request.getURI().toString();
         String[] split = authUrls.split(",");
         for (String url : split) {
-            if (urii.indexOf(url)!=-1 && StringUtils.isEmpty(userId)) {
+            if (urii.indexOf(url) != -1 && StringUtils.isEmpty(userId)) {
                 // 跳入登录页面
                 response.setStatusCode(HttpStatus.SEE_OTHER);
-                response.getHeaders().set(HttpHeaders.LOCATION, "http://www.gmall.com/login.html?originUrl="+request.getURI());
+                response.getHeaders().set(HttpHeaders.LOCATION, "http://www.gmall.com/login.html?originUrl=" + request.getURI());
                 Mono<Void> voidMono = response.setComplete();
                 return voidMono;
             }
@@ -89,11 +89,35 @@ public class AuthGlobalFilter implements GlobalFilter {
         // 如果用户已经正常通过token的认证校验
         if (!StringUtils.isEmpty(userId)) {
             request.mutate().header("userId", userId).build();
-            chain.filter(exchange.mutate().request(request).build());
+        } else {
+            // 在所有不用登录就可以直接访问的功能中，购物车功能需要userTempId
+            String userTempId = getUserTempId(request);
+            request.mutate().header("userTempId", userTempId).build();
         }
+        chain.filter(exchange.mutate().request(request).build());
 
 
         return chain.filter(exchange);
+    }
+
+    private String getUserTempId(ServerHttpRequest request) {
+
+        String userTempId = "";
+
+        MultiValueMap<String, HttpCookie> cookies = request.getCookies();
+
+        HttpCookie userTempIdCookie = cookies.getFirst("userTempId");
+
+        if (null != userTempIdCookie) {
+            userTempId = URLDecoder.decode(userTempIdCookie.getValue());
+        }else{
+            List<String> strings = request.getHeaders().get("userTempId");
+            if(null!=strings){
+                userTempId = strings.get(0);
+            }
+        }
+
+        return userTempId;
     }
 
     private String getUserId(ServerHttpRequest request) {
@@ -104,14 +128,20 @@ public class AuthGlobalFilter implements GlobalFilter {
         // 获得token
         MultiValueMap<String, HttpCookie> cookieMultiValueMap = request.getCookies();
         HttpCookie cookie = cookieMultiValueMap.getFirst("token");
-        if (cookie!=null) {
+        if (cookie != null) {
             token = URLDecoder.decode(cookie.getValue());
+        }else{
+            List<String> strings = request.getHeaders().get("token");
+            if(strings!=null){
+                token = strings.get(0);
+            }
         }
 
         if (!StringUtils.isEmpty(token)) {
             // 通过认证中心获得userId
             userId = userFeignClient.getUserId(token);
         }
+
         return userId;
     }
 

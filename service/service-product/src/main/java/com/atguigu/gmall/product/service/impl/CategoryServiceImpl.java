@@ -1,6 +1,7 @@
 package com.atguigu.gmall.product.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.atguigu.gmall.common.cache.GmallCache;
 import com.atguigu.gmall.model.product.BaseCategory1;
 import com.atguigu.gmall.model.product.BaseCategory2;
 import com.atguigu.gmall.model.product.BaseCategory3;
@@ -74,6 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
         return baseCategoryView;
     }
 
+    @GmallCache
     @Override
     public List<JSONObject> getBaseCategoryList() {
 

@@ -8,11 +8,11 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"com.atguigu.gmall"})
+@EnableFeignClients(basePackages= {"com.atguigu.gmall"})
 @ComponentScan("com.atguigu.gmall")
 public class WebAllApplication {
 
-    public static void main(String[] args) {
+public static void main(String[] args) {
         SpringApplication.run(WebAllApplication.class, args);
     }
 

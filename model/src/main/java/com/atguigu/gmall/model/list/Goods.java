@@ -11,7 +11,7 @@ import java.util.List;
 
 // 指定我们es 中的index，type 的信息。
 @Data
-@Document(indexName = "goods" ,type = "info",shards = 2,replicas = 0)
+@Document(indexName = "goods1" ,type = "info",shards = 2,replicas = 0)
 public class Goods {
 
     // 商品Id
